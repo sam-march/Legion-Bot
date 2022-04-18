@@ -208,9 +208,92 @@ async def suggestion(ctx, *, suggestion=None):
 		await msg1.add_reaction('✅')
 		await msg1.add_reaction('❌')
 
-@
+@client.command()
+@commands.has_role(963585547648004136)
+async def message(ctx, member: discord.Member, *, message):
+	em = discord.Embed(title="Message Sending", description=f"Bot is sending message ... Please Wait", colour=discord.Colour.purple())
+	alert=await ctx.reply(embed=em, mention_author=False)
+	try:
+		await member.send(f"> You have been sent a message from {ctx.author} (Moderator)\n```{message}```")
+		em = discord.Embed(title="📨 | Message Sent", description=f"Your message has been sent to {member.mention}", colour=discord.Colour.green())
+		await alert.edit(embed=em, mention_author=False)
+		em = discord.Embed(title="📨 | Message Sent", description=f"A message was sent to {member.mention} by {ctx.author.mention}.\n\nContents:```{message}```", colour=discord.Colour.green())
+		mod_logs = client.get_channel(965204403646758982)
+		await mod_logs.send(embed=em)
+	except:
+		em = discord.Embed(title="❌ | Message Send Error", description=f"The message to {member} failed to send. This may because you don't share a common server with the recipient, or their DMs are closed.\nIf you think there is a problem, please contact an admin", colour=discord.Colour.red())
+		await alert.edit(embed=em)
 
+@client.command()
+async def update(ctx, *, message):
+	em = discord.Embed(title="Update Sending", description=f"Bot is sending update ... Please Wait", colour=discord.Colour.green())
+	alert=await ctx.reply(embed=em, mention_author=False)
+	if ctx.author.id == 723569355710922802:
+		try:
+			updates_channel = client.get_channel(965552191567953942)
+			em = discord.Embed(title="🔔 | Bot Update", description=f"{message}", colour=discord.Colour.green())
+			await updates_channel.send("@everyone", embed=em)
+			em = discord.Embed(title="🔔 | Update Sent", description=f"The update sent", colour=discord.Colour.green())
+			await alert.edit(embed=em)
+		except:
+			em = discord.Embed(title="❌ | Update Send Error", description=f"The update to failed to send. Please check bot permissions in #bot-updates", colour=discord.Colour.red())
+			await alert.edit(embed=em)
+	else:
+		em = discord.Embed(title="❌ | Update Send Error", description=f"You don't have the permssions to send bot updates", colour=discord.Colour.red())
+		await alert.edit(embed=em)
 
+@client.command()
+@commands.has_role(963585547648004136)
+async def clear_amount(ctx, *, amount=1):
+	amount = amount +2
+	
+	try:
+		await ctx.channel.purge(limit=amount)
+		em = discord.Embed(title="🗑️ | Purged Message(s)", description=f"{ctx.author} just cleared {amount-2} message(s) in {ctx.channel.mention}", colour=discord.Colour.green())
+		mod_logs = client.get_channel(965204403646758982)
+		await mod_logs.send(embed=em)
+		
+	except:
+		dev = client.get_user(723569355710922802)
+		em = discord.Embed(title=f"❌ | Purge Messages Failed", description=f"The bot encountered an error when executing this command. This may be due to you, or the bot, not having the correct permissions. Please contact a superior or {dev.mention}", colour=discord.Colour.red())
+		await ctx.send(embed=em)
+
+@client.command()
+@commands.has_role(963585547648004136)
+async def addrole(ctx, member:discord.Member, role: discord.Role, *, reason= "No reason provided"):
+	em = discord.Embed(title=f"➕ | Adding Roles", description=f"Please wait...Bot working", colour=discord.Colour.green())
+	alert = await ctx.reply(embed=em, mention_author=False)
+	try:
+		await member.add_roles(role)
+		em = discord.Embed(title=f"➕ | Added Role", description=f"Bot successfully added {role.mention} to {member.mention}", colour=discord.Colour.green())
+		await alert.edit(embed=em)
+		em = discord.Embed(title="➕ | Added Role", description=f"{ctx.author.mention} just added {role.mention} to {member.mention}. Reason: ```{reason}```", colour=discord.Colour.green())
+		mod_logs = client.get_channel(965204403646758982)
+		await mod_logs.send(embed=em)
+	except:
+		em = discord.Embed(title=f"❌ | Add roles failed", description=f"I encountered a problem when adding the role, please make sure that I have the correct perms", colour=discord.Colour.red())
+		await alert.edit(embed=em, mention_author=False)
+
+@client.command()
+@commands.has_role(963585547648004136)
+async def removerole(ctx, member:discord.Member, role: discord.Role, *, reason= "No reason provided"):
+	em = discord.Embed(title=f"➕ | Removing Roles", description=f"Please wait...Bot working", colour=discord.Colour.green())
+	alert = await ctx.reply(embed=em, mention_author=False)
+	try:
+		await member.remove_roles(role)
+		em = discord.Embed(title=f"➕ | Removed Role", description=f"Bot successfully removed {role.mention} from {member.mention}", colour=discord.Colour.green())
+		await alert.edit(embed=em)
+		em = discord.Embed(title="➕ | Removed Role", description=f"{ctx.author.mention} just removed {role.mention} from {member.mention}. Reason: ```{reason}```", colour=discord.Colour.green())
+		mod_logs = client.get_channel(965204403646758982)
+		await mod_logs.send(embed=em)
+	except:
+		em = discord.Embed(title=f"❌ | Add roles failed", description=f"I encountered a problem when adding the role, please make sure that I have the correct perms", colour=discord.Colour.red())
+		await alert.edit(embed=em, mention_author=False)
+		
+	
+		
+	
+			
 
 
 keep_alive()
